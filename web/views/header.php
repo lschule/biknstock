@@ -38,8 +38,8 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-	        <li><a href="/getStocks/2011/0.4/0.4">Customize params in URL</a></li>
-            <li><a href="/es-head/index.html?base_uri=http://172.84.98.23:9200/" target="_blank">Analyze Elasticsearch</a></li>
+	        <li><a href="/getStocks/2011/0.4/0.4/200">Customize params in URL</a></li>
+            <li><a href="/es-head/index.html?base_uri=http://stock.loic.schule:9200/" target="_blank">Analyze Elasticsearch</a></li>
           </ul>
         </div>
       </div>

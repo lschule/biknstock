@@ -7,7 +7,7 @@ use Goodby\CSV\Import\Standard\LexerConfig;
 require 'YahooFinance/YahooFinanceCSV.php'; 
 
 class StockManager {
-	private $ESUrl  = '172.84.98.23:9200';
+	private $ESUrl  = '188.166.13.229:9200';
 	private $client;
 
 	public function __construct() {
@@ -81,6 +81,12 @@ class StockManager {
 		            'type' => 'double'
 		        ),
 		         'volume_ratio' => array(
+		            'type' => 'double'
+		        ),
+		        'date_before' => array(
+		            'type' => 'date'
+		        ),
+		         'volume_ratio_before' => array(
 		            'type' => 'double'
 		        )
 		    )
@@ -174,23 +180,32 @@ class StockManager {
 		$this->createHistoryIndex();
 		
 		$yf = new YahooFinanceCSV;
-
-		$mysqli = $this->initiate_db();
-		//Fetch all interesting stocks from the DB
-		$res = $mysqli->query("SELECT symbol FROM stocks");
-		while ($row = $res->fetch_assoc()) {
-			$symbol = $row['symbol'];
+		
+		$symbols = $yf->symbols;
+		foreach ($symbols as $symbol) {
 			$historicaldata = $yf->getQuotesCSV($symbol);
 			$historicaldata_row = explode("\n", $historicaldata);
 			$last_close = 0;
 			$avg_vol = 0;
 			$avg_vol_old = 0;
+			$volume_ratio_before = 0;
+			$date_before= '1921-01-01' ;
 			$i=0;
 			$params = array();
 			//later we compare "yesterday" with "today", so it's important to have the list in the right order
 			$historicaldata_reversed = array_reverse($historicaldata_row);
 			foreach ($historicaldata_reversed as $line){
 				$i++;
+				
+				
+				//store the value of the day before in variables:
+				if(isset($date)){
+					$date_before = $date;
+				}
+				if(isset($volume_ratio)){
+					$volume_ratio_before = $volume_ratio;
+				}
+				
 				$line_array = explode(",",$line);		
 				if(count($line_array)<2 || $line_array[0] == "Date"){
 					continue;
@@ -200,7 +215,7 @@ class StockManager {
 				}else{
 					$date = '1921-01-01';
 				}
-	
+				
 				$open = $this->normalize_val($line_array[1]);
 				$high = $this->normalize_val($line_array[2]);
 				$low = $this->normalize_val($line_array[3]);
@@ -218,6 +233,9 @@ class StockManager {
 					//avoid possible division by 0
 					$avg_vol_old = 1;
 				}
+				
+				
+				
 				
 				$avg_vol = (($avg_vol * ($i-1)) + $volume) / $i;
 				$volume_ratio = ($volume/$avg_vol_old)*100;
@@ -258,7 +276,9 @@ class StockManager {
 			        'open_high_ratio' => $openHighRatio,
 			        'close_open_ratio' => $closeOpenRatio,
 			        'volume_avg' => $avg_vol,
-			        'volume_ratio' => $volume_ratio
+			        'volume_ratio' => $volume_ratio,
+			        'date_before' => $date_before,
+			        'volume_ratio_before' => $volume_ratio_before
 			    );
 			}
 			if (!empty($params)){
@@ -316,7 +336,7 @@ class StockManager {
 			$params['index'] = 'stock_data_day';
 			$params['type']  = 'stock_data_day_type';
 			$params['body']['query']['filtered']['filter']['bool']["must"] = $rangeQuery;
-			$params['body']['fields'] = array("symbol","date","close_open_ratio","open_high_ratio","volume","volume_ratio");
+			$params['body']['fields'] = array("symbol","date","close_open_ratio","open_high_ratio","volume","volume_ratio","date_before","volume_ratio_before");
 			$params['body']['size'] = 10000;
 			$match = $this->client->search($params);
 			return $match["hits"]["hits"];
@@ -359,11 +379,11 @@ class StockManager {
 		$this->createIntraDayIndex();
 		//There is too much data in the CSVs to import everything, so we limitate the number of data we import but just taking the days that match an intersting day. 
 		
-		$interesting_matches = $this->getDataDay(0.1,0,2010);
+		$interesting_matches = $this->getDataDay(0.1,0.0,2008);
 		//build an array to use later for the CSV search -> array(symbol=>array(matching dates))
 		$matchesForCSV = array();
 		foreach($interesting_matches as $interesting_match){
-			$matchesForCSV[$interesting_match["fields"]["symbol"]][] = $interesting_match["fields"]["date"];
+			$matchesForCSV[$interesting_match["fields"]["symbol"][0]][] = $interesting_match["fields"]["date"][0];
 		}
 		
 		foreach($matchesForCSV as $symbol => $dates){

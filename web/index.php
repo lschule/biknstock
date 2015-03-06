@@ -6,6 +6,7 @@ require 'YahooFinance/YahooFinance.php';
 require 'YahooFinance/YahooIntraDay.php'; 
 require '../vendor/autoload.php';
 
+
 Flight::route('/', function(){
     Flight::render('header');
 	getDataDay(0.3, 0.3,2010);

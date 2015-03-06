@@ -50,8 +50,8 @@ hhvm                  = "false"
 
 # PHP Options
 composer_packages     = [        # List any global Composer packages that you want to install
-  "elasticsearch/elasticsearch": "~1.0",
-  "goodby/csv": "*"
+  "elasticsearch/elasticsearch:~1.0",
+  "goodby/csv:*"
 ]
 
 # Default web server document root
@@ -158,9 +158,8 @@ Vagrant.configure("2") do |config|
     override.ssh.private_key_path = '~/.ssh/id_rsa'
     override.vm.box = 'digital_ocean'
     override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-
     provider.token = 'd256196aa4c59e50ac6b55ec9efc7a597134d22943494b555bc7d507262f1622'
-    provider.image = 'Ubuntu 14.04 x64'
+    provider.image = 'ubuntu-14-04-x64'
     provider.region = 'ams3'
     provider.size = '512mb'
   end

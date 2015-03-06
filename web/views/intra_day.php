@@ -1,6 +1,6 @@
 
 
-<div id="graphdiv" style="width:1000px; height:300px;"></div>  
+<div id="graphdiv" style="width:800px; height:300px;"></div>  
   <script>
 	var stockData = function() {
      return "Time,Close\n"+

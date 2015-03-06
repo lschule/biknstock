@@ -352,8 +352,9 @@ class StockManager {
 			)
 		);
 		$termQuery[] = array(
-			"text" => array(
-				"symbol" => $symbol
+			"query_string" => array(
+				"default_field" => "symbol",
+				"query" => $symbol
 			)
 		);
 		
@@ -385,9 +386,8 @@ class StockManager {
 		foreach($interesting_matches as $interesting_match){
 			$matchesForCSV[$interesting_match["fields"]["symbol"][0]][] = $interesting_match["fields"]["date"][0];
 		}
-		
 		foreach($matchesForCSV as $symbol => $dates){
-			$fileName = 'intra_day_data/table_'.strtolower($symbol).'.csv';
+			$fileName = '/vagrant/web/intra_day_data/table_'.strtolower($symbol).'.csv';
 			if (file_exists($fileName)){
 				$params = array();
 				//open the matching CSV file

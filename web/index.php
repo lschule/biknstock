@@ -75,10 +75,10 @@ function getIntraDay ($symbol,$date){
 		$timesCloses = array();
 		
 		foreach($results as $line){
-			$times[] = $line["fields"]["time"];
-			$closes[] = $line["fields"]["close"];
-			$volumes[] = $line["fields"]["volume"];
-			$timesCloses[] = $line["fields"]["time"].",".$line["fields"]["close"];
+			$times[] = $line["fields"]["time"][0];
+			$closes[] = $line["fields"]["close"][0];
+			$volumes[] = $line["fields"]["volume"][0];
+			$timesCloses[] = $line["fields"]["time"][0].",".$line["fields"]["close"][0];
 		}
 		
 		$params = array("times" => $times,

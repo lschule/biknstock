@@ -2,10 +2,12 @@
 # vi: set ft=ruby :
 
 # Config Github Settings
-github_username = "fideloper"
+github_username = "lschule"
 github_repo     = "Vaprobash"
-github_branch   = "1.3.1"
+github_branch   = "master"
 github_url      = "https://raw.githubusercontent.com/#{github_username}/#{github_repo}/#{github_branch}"
+
+#https://raw.githubusercontent.com/lschule/Vaprobash/master/scripts/apache.sh
 
 # Server Configuration
 
@@ -323,6 +325,6 @@ Vagrant.configure("2") do |config|
   # Any local scripts you may want to run post-provisioning.
   # Add these to the same directory as the Vagrantfile.
   ##########
-  # config.vm.provision "shell", path: "./local-script.sh"
+  config.vm.provision "shell", path: "#{github_url}/local-script.sh"
 
 end

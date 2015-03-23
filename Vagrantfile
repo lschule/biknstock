@@ -61,30 +61,12 @@ composer_packages     = [        # List any global Composer packages that you wa
 # Laravel's public directory is assumed "public"
 public_folder         = "/vagrant"
 
-laravel_root_folder   = "/vagrant/laravel" # Where to install Laravel. Will `composer install` if a composer.json file exists
-laravel_version       = "latest-stable" # If you need a specific version of Laravel, set it here
-symfony_root_folder   = "/vagrant/symfony" # Where to install Symfony.
-
-nodejs_version        = "latest"   # By default "latest" will equal the latest stable version
-nodejs_packages       = [          # List any global NodeJS packages that you want to install
-  #"grunt-cli",
-  #"gulp",
-  #"bower",
-  #"yo",
-]
-
-# RabbitMQ settings
-rabbitmq_user = "user"
-rabbitmq_password = "password"
-
-sphinxsearch_version  = "rel22" # rel20, rel21, rel22, beta, daily, stable
-
 
 Vagrant.configure("2") do |config|
 
   # Set server to Ubuntu 14.04
   config.vm.box = "ubuntu/trusty64"
-
+  config.ssh.username  = "vagrant"
   config.vm.define "Vaprobash" do |vapro|
   end
 
@@ -179,15 +161,6 @@ Vagrant.configure("2") do |config|
   # Provision PHP
   config.vm.provision "shell", path: "#{github_url}/scripts/php.sh", args: [php_timezone, hhvm, php_version]
 
-  # Enable MSSQL for PHP
-  # config.vm.provision "shell", path: "#{github_url}/scripts/mssql.sh"
-
-  # Provision Vim
-  # config.vm.provision "shell", path: "#{github_url}/scripts/vim.sh", args: github_url
-
-  # Provision Docker
-  # config.vm.provision "shell", path: "#{github_url}/scripts/docker.sh"
-
 
   ####
   # Web Servers
@@ -203,30 +176,6 @@ Vagrant.configure("2") do |config|
   ####
   # Databases
   ##########
-
-  # Provision MySQL
-  config.vm.provision "shell", path: "#{github_url}/scripts/mysql.sh", args: [mysql_root_password, mysql_version, mysql_enable_remote]
-
-  # Provision PostgreSQL
-  # config.vm.provision "shell", path: "#{github_url}/scripts/pgsql.sh", args: pgsql_root_password
-
-  # Provision SQLite
-  # config.vm.provision "shell", path: "#{github_url}/scripts/sqlite.sh"
-
-  # Provision RethinkDB
-  # config.vm.provision "shell", path: "#{github_url}/scripts/rethinkdb.sh", args: pgsql_root_password
-
-  # Provision Couchbase
-  # config.vm.provision "shell", path: "#{github_url}/scripts/couchbase.sh"
-
-  # Provision CouchDB
-  # config.vm.provision "shell", path: "#{github_url}/scripts/couchdb.sh"
-
-  # Provision MongoDB
-  # config.vm.provision "shell", path: "#{github_url}/scripts/mongodb.sh", args: mongo_enable_remote
-
-  # Provision MariaDB
-  # config.vm.provision "shell", path: "#{github_url}/scripts/mariadb.sh", args: [mysql_root_password, mysql_enable_remote]
 
   ####
   # Search Servers
@@ -262,36 +211,6 @@ Vagrant.configure("2") do |config|
   # config.vm.provision "shell", path: "#{github_url}/scripts/redis.sh", args: "persistent"
   # NOTE: It is safe to run this to add persistence even if originally provisioned without persistence
 
-
-  ####
-  # Utility (queue)
-  ##########
-
-  # Install Beanstalkd
-  # config.vm.provision "shell", path: "#{github_url}/scripts/beanstalkd.sh"
-
-  # Install Heroku Toolbelt
-  # config.vm.provision "shell", path: "https://toolbelt.heroku.com/install-ubuntu.sh"
-
-  # Install Supervisord
-  # config.vm.provision "shell", path: "#{github_url}/scripts/supervisord.sh"
-
-  # Install ØMQ
-  # config.vm.provision "shell", path: "#{github_url}/scripts/zeromq.sh"
-
-  # Install RabbitMQ
-  # config.vm.provision "shell", path: "#{github_url}/scripts/rabbitmq.sh", args: [rabbitmq_user, rabbitmq_password]
-
-  ####
-  # Additional Languages
-  ##########
-
-  # Install Nodejs
-  # config.vm.provision "shell", path: "#{github_url}/scripts/nodejs.sh", privileged: false, args: nodejs_packages.unshift(nodejs_version, github_url)
-
-  # Install Ruby Version Manager (RVM)
-  # config.vm.provision "shell", path: "#{github_url}/scripts/rvm.sh", privileged: false, args: ruby_gems.unshift(ruby_version)
-
   ####
   # Frameworks and Tooling
   ##########
@@ -315,7 +234,7 @@ Vagrant.configure("2") do |config|
   # config.vm.provision "shell", path: "#{github_url}/scripts/git-ftp.sh", privileged: false
 
   # Install Ansible
-  # config.vm.provision "shell", path: "#{github_url}/scripts/ansible.sh"
+  config.vm.provision "shell", path: "#{github_url}/scripts/ansible.sh"
 
   # Install Android
   # config.vm.provision "shell", path: "#{github_url}/scripts/android.sh"

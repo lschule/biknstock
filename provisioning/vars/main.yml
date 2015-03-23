@@ -1,0 +1,6 @@
+---
+workspace: /vagrant
+hostname: loic.dev
+
+security_sudoers_passwordless:
+  - vagrant

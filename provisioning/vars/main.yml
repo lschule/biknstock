@@ -4,3 +4,10 @@ hostname: loic.dev
 
 security_sudoers_passwordless:
   - vagrant
+
+firewall_allowed_tcp_ports:
+  - "22"
+  - "25"
+  - "80"
+  - "443"
+  - "9200"

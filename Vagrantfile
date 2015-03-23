@@ -184,19 +184,6 @@ Vagrant.configure("2") do |config|
   # Install Elasticsearch
   config.vm.provision "shell", path: "#{github_url}/scripts/elasticsearch.sh"
 
-  # Install SphinxSearch
-  # config.vm.provision "shell", path: "#{github_url}/scripts/sphinxsearch.sh", args: [sphinxsearch_version]
-
-  ####
-  # Search Server Administration (web-based)
-  ##########
-
-  # Install ElasticHQ
-  # Admin for: Elasticsearch
-  # Works on: Apache2, Nginx
-  config.vm.provision "shell", path: "#{github_url}/scripts/elastichq.sh"
-
-
   ####
   # In-Memory Stores
   ##########
